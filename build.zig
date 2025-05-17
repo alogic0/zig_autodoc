@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
 
     const wasm = b.addExecutable(.{
         .name = "autodoc",
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = .{ .cwd_relative = "src/main.zig" },
         .target = b.resolveTargetQuery(.{
             .cpu_arch = .wasm32,
             .os_tag = .freestanding,
@@ -36,13 +36,13 @@ pub fn build(b: *std.Build) void {
     b.getInstallStep().dependOn(&b.addInstallFile(wasm.getEmittedBin(), "main.wasm").step);
 
     b.installDirectory(.{
-        .source_dir = .{ .path = "lib" },
+        .source_dir = .{ .cwd_relative = "lib" },
         .install_dir = .prefix,
         .install_subdir = "",
     });
 
     const exe_unit_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = .{ .cwd_relative = "src/main.zig" },
         .optimize = optimize,
     });
 
